@@ -22,6 +22,11 @@ pipeline {
                     sh 'docker push ahmedsalahelsayed/hello-world-devops:$BUILD_NUMBER'
                 }
             }
+        stage('Deploy to Kubernetes') {
+            steps {
+                sh 'kubectl apply -f deployment-service-hpa.yaml --validate=false'
+                }
+            }     
         }
     }
 }
