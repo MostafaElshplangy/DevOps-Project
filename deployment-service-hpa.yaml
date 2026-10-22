@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
       - name: web
-        image: ahmedsalahelsayed/hello-world-devops:latest
+        image: ahmedsalahelsayed/hello-world-devops:$BUILD_NUMBER
         imagePullPolicy: Always
         ports:
         - containerPort: 80
