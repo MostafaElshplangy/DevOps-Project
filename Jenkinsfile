@@ -26,7 +26,7 @@ pipeline {
 
         stage('Deploy to Kubernetes') {
             steps {
-                sh 'kubectl apply -f deployment-service-hpa.yaml --validate=false'
+                sh 'envsubst < deployment-service-hpa.yaml | kubectl apply -f -'
             }
         }     
     }
