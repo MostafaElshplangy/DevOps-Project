@@ -1,17 +1,32 @@
-name: DevOps Project Pipeline
+name: DevOps CI/CD Pipeline
 
 on:
   push:
-    branches: [ "main" ]
+    branches: [ "main", "master" ]
 
 jobs:
   build-and-deploy:
-    runs-on: self-hosted   # لتوجيه التمكين لـ VM زميلك
+    runs-on: self-hosted 
 
     steps:
-      - name: Checkout Repository
-        uses: actions/checkout@v4
+    
+    - name: Checkout Code
+      uses: actions/checkout@v4
 
-      - name: Build Docker Image
-        run: |
-          docker build -t devops-app:latest .
+    - name: Build Docker Image
+      run: |
+        docker build -t ahmedsalahelsayed/hello-world-devops:${{ github.run_number }} .
+
+    - name: Login and Push to Docker Hub
+      env:
+        DOCKER_USER: ${{ secrets.DOCKER_USER }}
+        DOCKER_PASS: ${{ secrets.DOCKER_PASS }}
+      run: |
+        echo "$DOCKER_PASS" | docker login -u "$DOCKER_USER" --password-stdin
+        docker push ahmedsalahelsayed/hello-world-devops:${{ github.run_number }}
+
+    
+    - name: Deploy to K8s
+      run: |
+        export BUILD_NUMBER=${{ github.run_number }}
+        envsubst < deployment-service-hpa.yaml | kubectl apply -f -
