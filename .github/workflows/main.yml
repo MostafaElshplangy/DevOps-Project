@@ -30,10 +30,9 @@ jobs:
       with:
         cmd: yq -i '.spec.template.spec.containers[0].image = "ahmedsalahelsayed/hello-world-devops:${{ github.run_number }}"' deployment-service-hpa.yaml
 
-    - name: Authenticate to Kubernetes
-      uses: azure/k8s-set-context@v4
-      with:
-        kubeconfig: ${{ secrets.KUBE_CONFIG }}
+    - name: Deploy to Kubernetes
+      run: |
+        kubectl apply -f deployment-service-hpa.yaml
 
     - name: Apply Kubernetes configuration
       run: kubectl apply -f deployment-service-hpa.yaml
