@@ -33,3 +33,5 @@ jobs:
     - name: Deploy to Kubernetes
       run: |
         kubectl apply -f deployment-service-hpa.yaml --validate=false
+    - name: Create k3s or kind cluster
+      uses: helm/kind-action@v1   
